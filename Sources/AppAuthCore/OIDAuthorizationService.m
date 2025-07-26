@@ -108,12 +108,15 @@ NS_ASSUME_NONNULL_BEGIN
   NSURL *standardizedURL = [URL standardizedURL];
   NSURL *standardizedRedirectURL = [redirectionURL standardizedURL];
 
+  NSString *trimmedPath = [standardizedURL.path stringByTrimmingCharactersInSet:[NSCharacterSet characterSetWithCharactersInString:@"/"]];
+  NSString *trimmedRedirectPath = [standardizedRedirectURL.path stringByTrimmingCharactersInSet:[NSCharacterSet characterSetWithCharactersInString:@"/"]];
+
   return [standardizedURL.scheme caseInsensitiveCompare:standardizedRedirectURL.scheme] == NSOrderedSame
       && OIDIsEqualIncludingNil(standardizedURL.user, standardizedRedirectURL.user)
       && OIDIsEqualIncludingNil(standardizedURL.password, standardizedRedirectURL.password)
       && OIDIsEqualIncludingNil(standardizedURL.host, standardizedRedirectURL.host)
       && OIDIsEqualIncludingNil(standardizedURL.port, standardizedRedirectURL.port)
-      && OIDIsEqualIncludingNil(standardizedURL.path, standardizedRedirectURL.path);
+      && [trimmedPath isEqualToString:trimmedRedirectPath];
 }
 
 - (BOOL)shouldHandleURL:(NSURL *)URL {
